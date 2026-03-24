@@ -1,0 +1,368 @@
+[
+  {
+    "season": ["spring", "summer", "fall"],
+    "name": "Ancient Fruit",
+    "buy_price": 1000,
+    "growth_days": 28,
+    "regrow_days": 7,
+    "sell_price_regular": 605,
+    "sell_price_silver": 756,
+    "sell_price_gold": 907,
+    "giant_crop": false,                    //add these lines to the rest
+    "guaranteed_yeild": 1,                  //add these to the rest
+    "Obtained_by": "Traveling Merchant"     //add these to the rest
+  },
+  {
+    "season": ["spring", "summer"],
+    "name": "Coffee Bean",
+    "buy_price": 2500,
+    "growth_days": 10,
+    "regrow_days": 2,
+    "sell_price_regular": 15,
+    "sell_price_silver": 18,
+    "sell_price_gold": 22,
+    "giant_crop": false,                    //add these lines to the rest
+    "guaranteed_yeild": 4,                  //add these to the rest
+    "Obtained_by": "Mines"                  //add these to the rest
+  },
+  {
+    "season": ["spring"],
+    "name": "Cauliflower",
+    "buy_price": 80,
+    "growth_days": 12,
+    "regrow_days": null,
+    "sell_price_regular": 192,
+    "sell_price_silver": 240,
+    "sell_price_gold": 288
+  },
+  {
+    "season": ["spring"],
+    "name": "Potato",
+    "buy_price": 50,
+    "growth_days": 6,
+    "regrow_days": null,
+    "sell_price_regular": 88,
+    "sell_price_silver": 110,
+    "sell_price_gold": 132
+  },
+  {
+    "season": ["spring"],
+    "name": "Kale",
+    "buy_price": 70,
+    "growth_days": 6,
+    "regrow_days": null,
+    "sell_price_regular": 121,
+    "sell_price_silver": 151,
+    "sell_price_gold": 181
+  },
+  {
+    "season": ["spring"],
+    "name": "Garlic",
+    "buy_price": 40,
+    "growth_days": 4,
+    "regrow_days": null,
+    "sell_price_regular": 66,
+    "sell_price_silver": 82,
+    "sell_price_gold": 99
+  },
+  {
+    "season": ["spring"],
+    "name": "Parsnip",
+    "buy_price": 20,
+    "growth_days": 4,
+    "regrow_days": null,
+    "sell_price_regular": 38,
+    "sell_price_silver": 47,
+    "sell_price_gold": 57
+  },
+  {
+    "season": ["spring"],
+    "name": "Rhubarb",
+    "buy_price": 100,
+    "growth_days": 13,
+    "regrow_days": null,
+    "sell_price_regular": 242,
+    "sell_price_silver": 302,
+    "sell_price_gold": 363
+  },
+  {
+    "season": ["spring"],
+    "name": "Blue Jazz",
+    "buy_price": 30,
+    "growth_days": 7,
+    "regrow_days": null,
+    "sell_price_regular": 55,
+    "sell_price_silver": 68,
+    "sell_price_gold": 82
+  },
+  {
+    "season": ["spring"],
+    "name": "Tulip",
+    "buy_price": 20,
+    "growth_days": 6,
+    "regrow_days": null,
+    "sell_price_regular": 33,
+    "sell_price_silver": 41,
+    "sell_price_gold": 49
+  },
+  {
+    "season": ["spring"],
+    "name": "Strawberry",
+    "buy_price": 100,
+    "growth_days": 8,
+    "regrow_days": 4,
+    "sell_price_regular": 132,
+    "sell_price_silver": 165,
+    "sell_price_gold": 198
+  },
+  {
+    "season": ["spring"],
+    "name": "Green Bean",
+    "buy_price": 60,
+    "growth_days": 10,
+    "regrow_days": 3,
+    "sell_price_regular": 44,
+    "sell_price_silver": 55,
+    "sell_price_gold": 66
+  },
+  {
+    "season": ["summer"],
+    "name": "Melon",
+    "buy_price": 80,
+    "growth_days": 12,
+    "regrow_days": null,
+    "sell_price_regular": 275,
+    "sell_price_silver": 343,
+    "sell_price_gold": 412
+  },
+  {
+    "season": ["summer"],
+    "name": "Red Cabbage",
+    "buy_price": 100,
+    "growth_days": 9,
+    "regrow_days": null,
+    "sell_price_regular": 286,
+    "sell_price_silver": 357,
+    "sell_price_gold": 412
+  },
+  {
+    "season": ["summer"],
+    "name": "Radish",
+    "buy_price": 40,
+    "growth_days": 6,
+    "regrow_days": null,
+    "sell_price_regular": 99,
+    "sell_price_silver": 123,
+    "sell_price_gold": 148
+  },
+  {
+    "season": ["summer"],
+    "name": "Starfruit",
+    "buy_price": 400,
+    "growth_days": 13,
+    "regrow_days": null,
+    "sell_price_regular": 825,
+    "sell_price_silver": 1031,
+    "sell_price_gold": 1237
+  },
+  {
+    "season": ["summer", "fall"],
+    "name": "Wheat",
+    "buy_price": 10,
+    "growth_days": 4,
+    "regrow_days": null,
+    "sell_price_regular": 27,
+    "sell_price_silver": 33,
+    "sell_price_gold": 40
+  },
+  {
+    "season": ["summer", "fall"],
+    "name": "Sunflower",
+    "buy_price": 200,
+    "growth_days": 8,
+    "regrow_days": null,
+    "sell_price_regular": 88,
+    "sell_price_silver": 110,
+    "sell_price_gold": 132
+  },
+  {
+    "season": ["summer"],
+    "name": "Summer Spangle",
+    "buy_price": 50,
+    "growth_days": 8,
+    "regrow_days": null,
+    "sell_price_regular": 99,
+    "sell_price_silver": 123,
+    "sell_price_gold": 148
+  },
+  {
+    "season": ["summer"],
+    "name": "Poppy",
+    "buy_price": 100,
+    "growth_days": 7,
+    "regrow_days": null,
+    "sell_price_regular": 154,
+    "sell_price_silver": 192,
+    "sell_price_gold": 231
+  },
+  {
+    "season": ["summer"],
+    "name": "Blueberry",
+    "buy_price": 80,
+    "growth_days": 13,
+    "regrow_days": 4,
+    "sell_price_regular": 55,
+    "sell_price_silver": 68,
+    "sell_price_gold": 82
+  },
+  {
+    "season": ["summer"],
+    "name": "Hops",
+    "buy_price": 60,
+    "growth_days": 11,
+    "regrow_days": 1,
+    "sell_price_regular": 27,
+    "sell_price_silver": 33,
+    "sell_price_gold": 40
+  },
+  {
+    "season": ["summer"],
+    "name": "Tomato",
+    "buy_price": 50,
+    "growth_days": 11,
+    "regrow_days": 4,
+    "sell_price_regular": 66,
+    "sell_price_silver": 82,
+    "sell_price_gold": 99
+  },
+  {
+    "season": ["summer"],
+    "name": "Hot Pepper",
+    "buy_price": 40,
+    "growth_days": 5,
+    "regrow_days": 3,
+    "sell_price_regular": 44,
+    "sell_price_silver": 55,
+    "sell_price_gold": 66
+  },
+  {
+    "season": ["summer", "fall"],
+    "name": "Corn",
+    "buy_price": 150,
+    "growth_days": 14,
+    "regrow_days": 4,
+    "sell_price_regular": 55,
+    "sell_price_silver": 68,
+    "sell_price_gold": 82
+  },
+  {
+    "season": ["fall"],
+    "name": "Pumpkin",
+    "buy_price": 100,
+    "growth_days": 13,
+    "regrow_days": null,
+    "sell_price_regular": 352,
+    "sell_price_silver": 440,
+    "sell_price_gold": 528
+  },
+  {
+    "season": ["fall"],
+    "name": "Artichoke",
+    "buy_price": 30,
+    "growth_days": 8,
+    "regrow_days": null,
+    "sell_price_regular": 176,
+    "sell_price_silver": 220,
+    "sell_price_gold": 264
+  },
+  {
+    "season": ["fall"],
+    "name": "Beet",
+    "buy_price": 20,
+    "growth_days": 6,
+    "regrow_days": null,
+    "sell_price_regular": 110,
+    "sell_price_silver": 137,
+    "sell_price_gold": 165
+  },
+  {
+    "season": ["fall"],
+    "name": "Bok Choy",
+    "buy_price": 50,
+    "growth_days": 4,
+    "regrow_days": null,
+    "sell_price_regular": 88,
+    "sell_price_silver": 110,
+    "sell_price_gold": 132
+  },
+  {
+    "season": ["fall"],
+    "name": "Amaranth",
+    "buy_price": 70,
+    "growth_days": 7,
+    "regrow_days": null,
+    "sell_price_regular": 165,
+    "sell_price_silver": 206,
+    "sell_price_gold": 247
+  },
+  {
+    "season": ["fall"],
+    "name": "Sweet Gem Berry",
+    "buy_price": 1000,
+    "growth_days": 24,
+    "regrow_days": null,
+    "sell_price_regular": 3000,
+    "sell_price_silver": 3750,
+    "sell_price_gold": 4500
+  },
+  {
+    "season": ["fall"],
+    "name": "Yam",
+    "buy_price": 60,
+    "growth_days": 10,
+    "regrow_days": null,
+    "sell_price_regular": 176,
+    "sell_price_silver": 220,
+    "sell_price_gold": 264
+  },
+  {
+    "season": ["fall"],
+    "name": "Fairy Rose",
+    "buy_price": 200,
+    "growth_days": 12,
+    "regrow_days": null,
+    "sell_price_regular": 319,
+    "sell_price_silver": 398,
+    "sell_price_gold": 478
+  },
+  {
+    "season": ["fall"],
+    "name": "Eggplant",
+    "buy_price": 20,
+    "growth_days": 5,
+    "regrow_days": 5,
+    "sell_price_regular": 66,
+    "sell_price_silver": 82,
+    "sell_price_gold": 99
+  },
+  {
+    "season": ["fall"],
+    "name": "Cranberries",
+    "buy_price": 240,
+    "growth_days": 7,
+    "regrow_days": 5,
+    "sell_price_regular": 82,
+    "sell_price_silver": 102,
+    "sell_price_gold": 123
+  },
+  {
+    "season": ["fall"],
+    "name": "Grapes",
+    "buy_price": 60,
+    "growth_days": 10,
+    "regrow_days": 3,
+    "sell_price_regular": 88,
+    "sell_price_silver": 110,
+    "sell_price_gold": 132
+  }
+]
