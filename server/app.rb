@@ -7,23 +7,36 @@ def crops_data
   JSON.parse(File.read(file_path))
 end
 
+def economy_for(crop)
+  crop.fetch('economy', {})
+end
+
+def crop_sell_price(crop, quality)
+  economy_for(crop).dig('sell_prices', quality).to_i
+end
+
+def crop_yield(crop)
+  amount = economy_for(crop)['yield'].to_i
+  amount.positive? ? amount : 1
+end
+
 def crop_harvests(crop, days)
-  growth_days = crop['growth_days'].to_i
+  growth_days = economy_for(crop)['growth_days'].to_i
   return 0 if growth_days <= 0 || days < growth_days
 
-  regrow_days = crop['regrow_days']
+  regrow_days = economy_for(crop)['regrow_days']
   return 1 if regrow_days.nil?
 
   extra_harvests = (days - growth_days) / regrow_days.to_i
   1 + extra_harvests
 end
 
-def crop_profit(crop, days)
+def crop_profit(crop, days, quality)
   harvests = crop_harvests(crop, days)
   return 0 if harvests.zero?
 
-  revenue = harvests * crop['sell_price'].to_i
-  seed_cost = crop['buy_price'].to_i
+  revenue = harvests * crop_yield(crop) * crop_sell_price(crop, quality)
+  seed_cost = economy_for(crop)['seed_price'].to_i
   revenue - seed_cost
 end
 
@@ -41,15 +54,18 @@ end
 get '/api/best-crops' do
   season = params['season']&.downcase
   days = params['days'].to_i
+  quality = params['quality']&.downcase || 'regular'
 
-  seasonal_crops = crops_data.select { |crop| crop['season'] == season }
+  quality = 'regular' unless %w[regular silver gold].include?(quality)
+
+  seasonal_crops = crops_data.select { |crop| crop.fetch('seasons', []).include?(season) }
 
   scored = seasonal_crops.map do |crop|
     harvests = crop_harvests(crop, days)
     {
       name: crop['name'],
       harvests: harvests,
-      profit: crop_profit(crop, days)
+      profit: crop_profit(crop, days, quality)
     }
   end
 
@@ -62,7 +78,8 @@ get '/api/best-crops' do
     {
       best_crop: best[:name],
       profit: best[:profit],
-      harvests: best[:harvests]
+      harvests: best[:harvests],
+      quality: quality
     }.to_json
   end
 end
