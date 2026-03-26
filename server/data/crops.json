@@ -14,7 +14,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -44,7 +45,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -74,7 +76,8 @@
       }
     },
     "traits": {
-      "giant_crop": true
+      "giant_crop": true,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -101,7 +104,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -128,7 +132,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -155,7 +160,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -189,7 +195,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -216,7 +223,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -250,7 +258,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -277,7 +286,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -304,7 +314,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -330,7 +341,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -357,7 +369,8 @@
       }
     },
     "traits": {
-      "giant_crop": true
+      "giant_crop": true,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -385,7 +398,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -423,7 +437,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -441,7 +465,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -475,7 +500,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": true
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -493,7 +528,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -511,7 +556,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -529,7 +584,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -547,7 +612,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -565,7 +640,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -583,7 +668,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -601,7 +696,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -619,7 +724,18 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -637,7 +753,17 @@
       }
     },
     "traits": {
-      "giant_crop": true
+      "giant_crop": true,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -655,7 +781,24 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ],
+      "requirements": [
+        {
+          "type": "year",
+          "min": 2,
+          "label": "Year 2 or later"
+        }
+      ]
     }
   },
   {
@@ -673,7 +816,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -707,7 +851,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -725,7 +879,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": true
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -743,7 +907,8 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
     },
     "availability": {
       "sources": [
@@ -770,7 +935,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -788,7 +963,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -806,7 +991,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -824,7 +1019,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   },
   {
@@ -842,7 +1047,17 @@
       }
     },
     "traits": {
-      "giant_crop": false
+      "giant_crop": false,
+      "sycthe_harvest": false
+    },
+    "availability": {
+      "sources": [
+        {
+          "type": "shop",
+          "vendor": "Pierre",
+          "location": "Pierre's General Store"
+        }
+      ]
     }
   }
 ]
