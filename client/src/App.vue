@@ -14,6 +14,7 @@ async function fetchData() {
   const params = new URLSearchParams({
     season: season.value,
     days: dayInSeason.value,
+    budget: budget.value,
   });
   
   const res = await fetch(
@@ -53,7 +54,7 @@ onMounted(() => {
 
       <div class="form-group">
         <label for="budget">Budget (gold):</label>
-        <input v-model.number="budget" id="budget" type="number" min="0" />
+        <input v-model.number="budget" id="budget" type="number" min="0" @change="fetchData" />
       </div>
 
       <div class="form-group checkbox">
@@ -66,8 +67,13 @@ onMounted(() => {
       <p v-if="result.error" class="error">{{ result.error }}</p>
       <div v-else>
         <p><strong>Best Crop:</strong> {{ result.best_crop }}</p>
-        <p><strong>Profit:</strong> {{ result.profit }} gold</p>
+        <p><strong>Profit (per seed):</strong> {{ result.profit }} gold</p>
         <p><strong>Harvests:</strong> {{ result.harvests }}</p>
+        <div v-if="budget > 0 && result.seeds_affordable !== undefined" class="budget-section">
+          <p><strong>Seeds Affordable:</strong> {{ result.seeds_affordable }}</p>
+          <p><strong>Total Seed Cost:</strong> {{ result.total_seed_cost }} gold</p>
+          <p><strong>Lowest Total Profit:</strong> {{ result.lowest_profit }} gold</p>
+        </div>
       </div>
     </div>
   </div>
@@ -224,5 +230,16 @@ h1 {
   border-left: 4px solid #c62828;
   font-weight: 500;
   animation: slideIn 0.4s ease-out;
+}
+
+.budget-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(27, 94, 32, 0.3);
+}
+
+.budget-section p {
+  margin: 10px 0;
+  font-size: 15px;
 }
 </style>

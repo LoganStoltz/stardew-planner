@@ -54,6 +54,7 @@ end
 get '/api/best-crops' do
   season = params['season']&.downcase
   days = params['days'].to_i
+  budget = params['budget'].to_i
   quality = params['quality']&.downcase || 'regular'
 
   quality = 'regular' unless %w[regular silver gold].include?(quality)
@@ -65,7 +66,8 @@ get '/api/best-crops' do
     {
       name: crop['name'],
       harvests: harvests,
-      profit: crop_profit(crop, days, quality)
+      profit: crop_profit(crop, days, quality),
+      seed_price: economy_for(crop)['seed_price'].to_i
     }
   end
 
@@ -75,11 +77,29 @@ get '/api/best-crops' do
   if best.nil? || best[:profit] <= 0
     { error: 'No profitable crop found for those inputs.' }.to_json
   else
-    {
+    response = {
       best_crop: best[:name],
       profit: best[:profit],
       harvests: best[:harvests],
       quality: quality
-    }.to_json
+    }
+
+    # Add budget calculations if budget is provided
+    if budget > 0
+      seed_price = best[:seed_price]
+      if seed_price > 0
+        seeds_affordable = budget / seed_price
+        total_seed_cost = seeds_affordable * seed_price
+        lowest_profit = best[:profit] * seeds_affordable
+
+        response.merge!({
+          seeds_affordable: seeds_affordable,
+          total_seed_cost: total_seed_cost,
+          lowest_profit: lowest_profit
+        })
+      end
+    end
+
+    response.to_json
   end
 end
