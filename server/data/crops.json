@@ -1,7 +1,7 @@
 [
   {
     "name": "Ancient Fruit",
-    "seasons": ["spring", "summer", "fall"],
+    "seasons": ["spring", "summer", "fall","winter"],
     "economy": {
       "seed_price": 1000,
       "growth_days": 28,

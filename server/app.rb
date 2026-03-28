@@ -40,6 +40,17 @@ def crop_profit(crop, days, quality)
   revenue - seed_cost
 end
 
+def days_remaining_in_season(day_in_season, season_length = 28)
+  safe_day = [[day_in_season.to_i, 1].max, season_length].min
+  season_length - safe_day + 1
+end
+
+def param_true?(value, default: true)
+  return default if value.nil?
+
+  %w[true 1 yes on].include?(value.to_s.downcase)
+end
+
 use Rack::Cors do
   allow do
     origins '*'
@@ -53,21 +64,37 @@ end
 
 get '/api/best-crops' do
   season = params['season']&.downcase
-  days = params['days'].to_i
+  day_in_season = params['days'].to_i
+  days = days_remaining_in_season(day_in_season)
   budget = params['budget'].to_i
+  include_ancient_fruit = param_true?(params['includeAncientFruit'])
+  include_sweet_gem_berry = param_true?(params['includeSweetGemBerry'])
   quality = params['quality']&.downcase || 'regular'
 
   quality = 'regular' unless %w[regular silver gold].include?(quality)
 
   seasonal_crops = crops_data.select { |crop| crop.fetch('seasons', []).include?(season) }
 
-  scored = seasonal_crops.map do |crop|
+  filtered_crops = seasonal_crops.reject do |crop|
+    crop_name = crop['name']
+    (!include_ancient_fruit && crop_name == 'Ancient Fruit') ||
+      (!include_sweet_gem_berry && crop_name == 'Sweet Gem Berry')
+  end
+
+  scored = filtered_crops.map do |crop|
     harvests = crop_harvests(crop, days)
+    crop_yield_amount = crop_yield(crop)
+    crop_sell_amount = crop_sell_price(crop, quality)
+    seed_price = economy_for(crop)['seed_price'].to_i
+    revenue = harvests * crop_yield_amount * crop_sell_amount
     {
       name: crop['name'],
       harvests: harvests,
-      profit: crop_profit(crop, days, quality),
-      seed_price: economy_for(crop)['seed_price'].to_i
+      profit: revenue - seed_price,
+      seed_price: seed_price,
+      yield: crop_yield_amount,
+      sell_price: crop_sell_amount,
+      revenue: revenue
     }
   end
 
@@ -81,7 +108,13 @@ get '/api/best-crops' do
       best_crop: best[:name],
       profit: best[:profit],
       harvests: best[:harvests],
-      quality: quality
+      quality: quality,
+      day_in_season: day_in_season,
+      days_remaining: days,
+      yield: best[:yield],
+      sell_price: best[:sell_price],
+      seed_price: best[:seed_price],
+      revenue: best[:revenue]
     }
 
     # Add budget calculations if budget is provided

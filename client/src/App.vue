@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const season = ref('spring')
 const dayInSeason = ref(1)
 const year = ref(1)
 const includeAncientFruit = ref(true)
+const includeSweetGemBerry = ref(true)
 const budget = ref(0)
 const result = ref(null)
 
@@ -15,6 +16,8 @@ async function fetchData() {
     season: season.value,
     days: dayInSeason.value,
     budget: budget.value,
+    includeAncientFruit: includeAncientFruit.value,
+    includeSweetGemBerry: includeSweetGemBerry.value,
   });
   
   const res = await fetch(
@@ -22,10 +25,6 @@ async function fetchData() {
   );
   result.value = await res.json();
 }
-
-onMounted(() => {
-  fetchData();
-});
 </script>
 
 <template>
@@ -35,7 +34,7 @@ onMounted(() => {
     <div class="form-section">
       <div class="form-group">
         <label for="season">Season:</label>
-        <select v-model="season" id="season" @change="fetchData">
+        <select v-model="season" id="season">
           <option v-for="s in seasons" :key="s" :value="s">
             {{ s.charAt(0).toUpperCase() + s.slice(1) }}
           </option>
@@ -43,8 +42,8 @@ onMounted(() => {
       </div>
 
       <div class="form-group">
-        <label for="day">Day in Season:</label>
-        <input v-model.number="dayInSeason" id="day" type="number" min="1" max="28" @change="fetchData" />
+        <label for="day">What day of the Season is it:</label>
+        <input v-model.number="dayInSeason" id="day" type="number" min="1" max="28" />
       </div>
 
       <div class="form-group">
@@ -54,12 +53,21 @@ onMounted(() => {
 
       <div class="form-group">
         <label for="budget">Budget (gold):</label>
-        <input v-model.number="budget" id="budget" type="number" min="0" @change="fetchData" />
+        <input v-model.number="budget" id="budget" type="number" min="0" />
       </div>
 
       <div class="form-group checkbox">
         <input v-model="includeAncientFruit" id="ancient-fruit" type="checkbox" />
         <label for="ancient-fruit">Include Ancient Fruit in search</label>
+      </div>
+
+      <div class="form-group checkbox">
+        <input v-model="includeSweetGemBerry" id="sweet-gem-berry" type="checkbox" />
+        <label for="sweet-gem-berry">Include Sweet Gem Berry in search</label>
+      </div>
+
+      <div class="form-group">
+        <button @click="fetchData" class="fetch-button">Find Best Crop</button>
       </div>
     </div>
 
@@ -69,6 +77,12 @@ onMounted(() => {
         <p><strong>Best Crop:</strong> {{ result.best_crop }}</p>
         <p><strong>Profit (per seed):</strong> {{ result.profit }} gold</p>
         <p><strong>Harvests:</strong> {{ result.harvests }}</p>
+        <div class="math-section" v-if="result.revenue !== undefined">
+          <p><strong>Math Breakdown</strong></p>
+          <p>Day {{ result.day_in_season }} means {{ result.days_remaining }} day(s) remaining in season.</p>
+          <p>Revenue = harvests × yield × sell price = {{ result.harvests }} × {{ result.yield }} × {{ result.sell_price }} = {{ result.revenue }} gold</p>
+          <p>Profit per seed = revenue − seed price = {{ result.revenue }} − {{ result.seed_price }} = {{ result.profit }} gold</p>
+        </div>
         <div v-if="budget > 0 && result.seeds_affordable !== undefined" class="budget-section">
           <p><strong>Seeds Affordable:</strong> {{ result.seeds_affordable }}</p>
           <p><strong>Total Seed Cost:</strong> {{ result.total_seed_cost }} gold</p>
@@ -127,7 +141,7 @@ h1 {
 .form-group.checkbox {
   flex-direction: row;
   align-items: center;
-  margin-bottom: 8px;
+  margin: 20px 0;
 }
 
 .form-group.checkbox input {
@@ -183,6 +197,18 @@ h1 {
   background-color: #fffbf5;
 }
 
+.fetch-button {
+  padding: 12px 20px;
+  background-color: #a97a3f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
 .results-section {
   background: linear-gradient(135deg, #d4f1d4 0%, #c8e6c9 100%);
   padding: 30px;
@@ -236,6 +262,12 @@ h1 {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 2px solid rgba(27, 94, 32, 0.3);
+}
+
+.math-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px dashed rgba(27, 94, 32, 0.3);
 }
 
 .budget-section p {
