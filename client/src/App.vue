@@ -66,6 +66,11 @@ async function fetchData() {
         <label for="sweet-gem-berry">Include Sweet Gem Berry in search</label>
       </div>
 
+      <div class="form-group checkbox">
+        <input v-model="oasisAccess" id="oasis-access" type="checkbox" />
+        <label for="oasis-access">Do you have access to the Oasis?</label>
+      </div>
+
       <div class="form-group">
         <button @click="fetchData" class="fetch-button">Find Best Crop</button>
       </div>
@@ -80,8 +85,8 @@ async function fetchData() {
         <div class="math-section" v-if="result.revenue !== undefined">
           <p><strong>Math Breakdown</strong></p>
           <p>Day {{ result.day_in_season }} means {{ result.days_remaining }} day(s) remaining in season.</p>
-          <p>Revenue = harvests × yield × sell price = {{ result.harvests }} × {{ result.yield }} × {{ result.sell_price }} = {{ result.revenue }} gold</p>
-          <p>Profit per seed = revenue − seed price = {{ result.revenue }} − {{ result.seed_price }} = {{ result.profit }} gold</p>
+          <p><strong>Revenue</strong> = harvests × minimum yield × sell price = {{ result.harvests }} × {{ result.yield }} × {{ result.sell_price }} = {{ result.revenue }} gold</p>
+          <p><strong>Profit per seed</strong> = revenue − seed price = {{ result.revenue }} − {{ result.seed_price }} = {{ result.profit }} gold</p>
         </div>
         <div v-if="budget > 0 && result.seeds_affordable !== undefined" class="budget-section">
           <p><strong>Seeds Affordable:</strong> {{ result.seeds_affordable }}</p>
@@ -253,7 +258,6 @@ h1 {
   background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
   padding: 16px;
   border-radius: 8px;
-  border-left: 4px solid #c62828;
   font-weight: 500;
   animation: slideIn 0.4s ease-out;
 }

@@ -51,6 +51,11 @@ def param_true?(value, default: true)
   %w[true 1 yes on].include?(value.to_s.downcase)
 end
 
+def oasis_only?(crop)
+  sources = crop.dig('availability', 'sources') || []
+  sources.any? { |s| s['location'] == 'Oasis' }
+end
+
 use Rack::Cors do
   allow do
     origins '*'
@@ -69,6 +74,7 @@ get '/api/best-crops' do
   budget = params['budget'].to_i
   include_ancient_fruit = param_true?(params['includeAncientFruit'])
   include_sweet_gem_berry = param_true?(params['includeSweetGemBerry'])
+  include_oasis = param_true?(params['includeOasis'])
   quality = params['quality']&.downcase || 'regular'
 
   quality = 'regular' unless %w[regular silver gold].include?(quality)
@@ -78,7 +84,8 @@ get '/api/best-crops' do
   filtered_crops = seasonal_crops.reject do |crop|
     crop_name = crop['name']
     (!include_ancient_fruit && crop_name == 'Ancient Fruit') ||
-      (!include_sweet_gem_berry && crop_name == 'Sweet Gem Berry')
+      (!include_sweet_gem_berry && crop_name == 'Sweet Gem Berry') ||
+       (!include_oasis && oasis_only?(crop))
   end
 
   scored = filtered_crops.map do |crop|
