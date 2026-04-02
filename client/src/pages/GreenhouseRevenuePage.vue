@@ -1,5 +1,21 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+
+const dropdownOpen = ref(false)
+
+function selectCrop(name) {
+  cropName.value = name
+  dropdownOpen.value = false
+}
+
+function handleOutsideClick(e) {
+  if (!e.target.closest('.custom-select')) {
+    dropdownOpen.value = false
+  }
+}
+
+onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
+onUnmounted(() => document.removeEventListener('mousedown', handleOutsideClick))
 
 const cropName = ref('Ancient Fruit')
 const cropCount = ref(116)
@@ -47,13 +63,31 @@ onMounted(loadCrops)
       </div>
 
       <div class="form-group">
-        <label for="crop-name">Crop name</label>
-        <select id="crop-name" v-model="cropName" :disabled="isLoadingCrops">
-          <option v-if="isLoadingCrops" value="">Loading crops...</option>
-          <option v-for="crop in crops" :key="crop.name" :value="crop.name">
-            {{ crop.name }}
-          </option>
-        </select>
+        <label>Crop name</label>
+        <div class="custom-select" :class="{ open: dropdownOpen, disabled: isLoadingCrops }">
+          <button
+            type="button"
+            class="custom-select-trigger"
+            :disabled="isLoadingCrops"
+            @click="dropdownOpen = !dropdownOpen"
+          >
+            <span>{{ isLoadingCrops ? 'Loading crops...' : cropName }}</span>
+            <svg class="chevron" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true">
+              <path d="M0 0l5 6 5-6z" />
+            </svg>
+          </button>
+          <ul v-if="dropdownOpen" class="custom-select-list" role="listbox">
+            <li
+              v-for="crop in crops"
+              :key="crop.name"
+              :class="{ selected: crop.name === cropName }"
+              role="option"
+              @mousedown.prevent="selectCrop(crop.name)"
+            >
+              {{ crop.name }}
+            </li>
+          </ul>
+        </div>
         <p v-if="cropsLoadError" class="error">{{ cropsLoadError }}</p>
       </div>
 
@@ -141,19 +175,94 @@ onMounted(loadCrops)
 }
 
 .form-group input,
-.form-group select,
 .fetch-button {
   min-height: 48px;
   border-radius: 14px;
   font: inherit;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   padding: 12px 14px;
   border: 1px solid var(--color-panel-border);
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+/* Custom dropdown */
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.custom-select.open .custom-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.custom-select.disabled .custom-select-trigger {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chevron {
+  flex-shrink: 0;
+  fill: currentColor;
+  opacity: 0.5;
+  margin-left: 8px;
+  transition: transform 0.15s;
+}
+
+.custom-select.open .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border: 1px solid var(--color-panel-border);
+  border-top: none;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  z-index: 100;
+  box-shadow: 0 8px 24px var(--color-shadow);
+}
+
+.custom-select-list li {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.custom-select-list li:hover {
+  background: var(--color-panel-border);
+}
+
+.custom-select-list li.selected {
+  font-weight: 700;
+  color: var(--color-accent);
 }
 
 .fetch-button {

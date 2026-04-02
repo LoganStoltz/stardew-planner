@@ -7,9 +7,10 @@ const year = ref(1)
 const includeAncientFruit = ref(true)
 const includeSweetGemBerry = ref(true)
 const oasisAccess = ref(false)
-const budget = ref(0)
+const budget = ref(null)
 const result = ref(null)
 const selectedCrop = ref(null)
+const searchedSeason = ref(null)
 
 const seasons = ['spring', 'summer', 'fall', 'winter']
 
@@ -28,6 +29,8 @@ const displayed = {
 }
 
 async function fetchData() {
+  searchedSeason.value = season.value
+
   const params = new URLSearchParams({
     season: season.value,
     days: dayInSeason.value,
@@ -73,8 +76,8 @@ async function fetchData() {
         </div>
 
         <div class="form-group">
-          <label for="budget">Budget (gold)</label>
-          <input id="budget" v-model.number="budget" type="number" min="0" placeholder="Enter your budget" />
+          <label for="budget">Budget (gold) <span class="optional-hint">(optional)</span></label>
+          <input id="budget" v-model.number="budget" type="number" min="0" placeholder="Leave blank to skip" />
         </div>
       </div>
 
@@ -95,8 +98,12 @@ async function fetchData() {
 
     <div class="results-section">
       <div v-if="result">
-        <p v-if="result.error" class="error">{{ result.error }}</p>
-        <div v-else>
+        <div v-if="searchedSeason === 'winter'" class="winter-notice">
+          <p><strong>Winter has no farmable crops outdoors.</strong> Consider using the Greenhouse to keep income going - check the Greenhouse Revenue page for planning help. Otherwise you may need to look elsewhere for gold this season. (Fishing, Foraging, etc...)</p>
+        </div>
+
+        <p v-if="result.error && searchedSeason !== 'winter'" class="error">{{ result.error }}</p>
+        <div v-if="!result.error">
           <div class="best-crop-hero">
             <p class="best-crop-kicker">{{ selectedCrop ? 'Selected Crop' : 'Best Crop' }}</p>
             <h3 class="best-crop-name">{{ displayed.best_crop }}</h3>
@@ -124,9 +131,25 @@ async function fetchData() {
           </div>
 
           <div v-if="budget > 0 && result.seeds_affordable !== undefined" class="budget-section">
-            <p><strong>Seeds Affordable:</strong> {{ result.seeds_affordable }}</p>
-            <p><strong>Total Seed Cost:</strong> {{ result.total_seed_cost }} gold</p>
-            <p><strong>Lowest Total Profit:</strong> {{ result.lowest_profit }} gold</p>
+            <p><strong>Budget Breakdown</strong></p>
+
+            <div class="math-row">
+              <span class="math-label">Seeds affordable</span>
+              <span class="math-formula">{{ budget }}g budget ÷ {{ displayed.seed_price }}g per seed</span>
+              <span class="math-result">{{ result.seeds_affordable }}</span>
+            </div>
+
+            <div class="math-row">
+              <span class="math-label">Total seed cost</span>
+              <span class="math-formula">{{ result.seeds_affordable }} seeds × {{ displayed.seed_price }}g</span>
+              <span class="math-result">{{ result.total_seed_cost }} gold</span>
+            </div>
+
+            <div class="math-row">
+              <span class="math-label">Lowest total profit</span>
+              <span class="math-formula">{{ result.seeds_affordable }} seeds × {{ displayed.profit }}g profit/seed</span>
+              <span class="math-result">{{ result.lowest_profit }} gold</span>
+            </div>
           </div>
 
           <div v-if="result.top_crops?.length" class="budget-section">
@@ -161,6 +184,7 @@ async function fetchData() {
   display: grid;
   grid-template-columns: minmax(320px, 520px) minmax(280px, 1fr);
   gap: 24px;
+  align-items: start;
 }
 
 .form-section,
@@ -223,6 +247,12 @@ async function fetchData() {
   font-weight: 700;
 }
 
+.optional-hint {
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
 .form-group.checkbox label {
   margin-bottom: 0;
   font-weight: 600;
@@ -267,11 +297,11 @@ async function fetchData() {
 }
 
 .best-crop-hero {
-  padding: 18px 20px;
+  padding: 14px 18px;
   border-radius: 14px;
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
   color: var(--color-accent-contrast);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .best-crop-kicker {
@@ -316,20 +346,36 @@ async function fetchData() {
   color: var(--color-danger-text);
 }
 
+.winter-notice {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border-left: 4px solid #1a87ec;
+  border-right: 4px solid #1a87ec;
+  background: #e8f1fb;
+  color: #1a3a5c;
+  margin-bottom: 14px;
+}
+
+.winter-notice p {
+  margin: 0;
+  color: #1a3a5c !important;
+  line-height: 1.5;
+}
+
 .math-section,
 .budget-section {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px dashed var(--color-panel-border);
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px solid rgba(15, 118, 110, 0.18);
 }
 
 .math-row {
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   align-items: baseline;
-  gap: 8px 16px;
-  margin-top: 12px;
-  padding: 10px 14px;
+  gap: 6px 14px;
+  margin-top: 8px;
+  padding: 8px 12px;
   border-radius: 10px;
   background: var(--color-surface);
 }
@@ -352,7 +398,7 @@ async function fetchData() {
 }
 
 .results-section p + p {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .top-crops-list {
