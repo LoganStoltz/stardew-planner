@@ -36,7 +36,7 @@
 
 .eyebrow {
   margin: 0 0 8px;
-  color: #7d5a36;
+  color: var(--color-accent);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -45,7 +45,7 @@
 
 .shell-header h1 {
   margin: 0;
-  color: #3d2d1c;
+  color: var(--color-title);
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1;
   font-family: Georgia, 'Times New Roman', serif;
@@ -59,10 +59,10 @@
 
 .nav-link {
   padding: 12px 16px;
-  border: 1px solid rgba(90, 62, 35, 0.18);
+  border: 1px solid var(--color-panel-border);
   border-radius: 999px;
-  color: #5c4024;
-  background: rgba(255, 248, 239, 0.85);
+  color: var(--color-label);
+  background: var(--color-panel);
   text-decoration: none;
   font-weight: 700;
   transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
@@ -70,12 +70,12 @@
 
 .nav-link:hover {
   transform: translateY(-1px);
-  border-color: rgba(90, 62, 35, 0.4);
+  border-color: var(--color-accent);
 }
 
 .nav-link.router-link-active {
-  color: #fffdf9;
-  background: linear-gradient(135deg, #7d5a36 0%, #5c4024 100%);
+  color: var(--color-accent-contrast);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
   border-color: transparent;
 }
 

@@ -9,20 +9,38 @@ const includeSweetGemBerry = ref(true)
 const oasisAccess = ref(false)
 const budget = ref(0)
 const result = ref(null)
+const selectedCrop = ref(null)
 
 const seasons = ['spring', 'summer', 'fall', 'winter']
+
+function selectCrop(crop) {
+  selectedCrop.value = crop
+}
+
+const displayed = {
+  get best_crop() { return selectedCrop.value?.name ?? result.value?.best_crop },
+  get profit()    { return selectedCrop.value?.profit ?? result.value?.profit },
+  get harvests()  { return selectedCrop.value?.harvests ?? result.value?.harvests },
+  get revenue()   { return selectedCrop.value?.revenue ?? result.value?.revenue },
+  get yield()     { return selectedCrop.value?.yield ?? result.value?.yield },
+  get sell_price(){ return selectedCrop.value?.sell_price ?? result.value?.sell_price },
+  get seed_price(){ return selectedCrop.value?.seed_price ?? result.value?.seed_price },
+}
 
 async function fetchData() {
   const params = new URLSearchParams({
     season: season.value,
     days: dayInSeason.value,
+    year: year.value,
     budget: budget.value,
     includeAncientFruit: includeAncientFruit.value,
     includeSweetGemBerry: includeSweetGemBerry.value,
+    includeOasis: oasisAccess.value,
   })
 
   const res = await fetch(`http://localhost:4567/api/best-crops?${params.toString()}`)
   result.value = await res.json()
+  selectedCrop.value = null
 }
 </script>
 
@@ -30,38 +48,34 @@ async function fetchData() {
   <section class="page-grid">
     <div class="form-section">
       <div class="section-heading">
-        <p class="kicker">Current Tool</p>
         <h2>Season Crop Planner</h2>
         <p>Compare the best crop for the current season based on the time left and your budget.</p>
       </div>
 
-      <div class="form-group">
-        <label for="season">Season</label>
-        <select id="season" v-model="season">
-          <option v-for="s in seasons" :key="s" :value="s">
-            {{ s.charAt(0).toUpperCase() + s.slice(1) }}
-          </option>
-        </select>
-      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="season">Season</label>
+          <select id="season" v-model="season">
+            <option v-for="s in seasons" :key="s" :value="s">
+              {{ s.charAt(0).toUpperCase() + s.slice(1) }}
+            </option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="day">What day of the season is it?</label>
-        <input id="day" v-model.number="dayInSeason" type="number" min="1" max="28" />
-      </div>
+        <div class="form-group">
+          <label for="day">Day in season</label>
+          <input id="day" v-model.number="dayInSeason" type="number" min="1" max="28" />
+        </div>
 
-      <div class="form-group">
-        <label for="year">Year</label>
-        <input id="year" v-model.number="year" type="number" min="1" />
-      </div>
+        <div class="form-group">
+          <label for="year">Year</label>
+          <input id="year" v-model.number="year" type="number" min="1" />
+        </div>
 
-      <div class="form-group">
-        <label for="budget">Budget (gold)</label>
-        <input id="budget" v-model.number="budget" type="number" min="0" />
-      </div>
-
-      <div class="form-group checkbox">
-        <input id="ancient-fruit" v-model="includeAncientFruit" type="checkbox" />
-        <label for="ancient-fruit">Include Ancient Fruit in search</label>
+        <div class="form-group">
+          <label for="budget">Budget (gold)</label>
+          <input id="budget" v-model.number="budget" type="number" min="0" placeholder="Enter your budget" />
+        </div>
       </div>
 
       <div class="form-group checkbox">
@@ -83,21 +97,53 @@ async function fetchData() {
       <div v-if="result">
         <p v-if="result.error" class="error">{{ result.error }}</p>
         <div v-else>
-          <p><strong>Best Crop:</strong> {{ result.best_crop }}</p>
-          <p><strong>Profit (per seed):</strong> {{ result.profit }} gold</p>
-          <p><strong>Harvests:</strong> {{ result.harvests }}</p>
+          <div class="best-crop-hero">
+            <p class="best-crop-kicker">{{ selectedCrop ? 'Selected Crop' : 'Best Crop' }}</p>
+            <h3 class="best-crop-name">{{ displayed.best_crop }}</h3>
+            <div class="best-crop-stats">
+              <span><strong>{{ displayed.profit }}</strong> gold profit/seed</span>
+              <span><strong>{{ displayed.harvests }}</strong> harvest{{ displayed.harvests !== 1 ? 's' : '' }}</span>
+            </div>
+          </div>
 
-          <div v-if="result.revenue !== undefined" class="math-section">
-            <p><strong>Math Breakdown</strong></p>
-            <p>Day {{ result.day_in_season }} means {{ result.days_remaining }} day(s) remaining in season.</p>
-            <p><strong>Revenue</strong> = harvests × minimum yield × sell price = {{ result.harvests }} × {{ result.yield }} × {{ result.sell_price }} = {{ result.revenue }} gold</p>
-            <p><strong>Profit per seed</strong> = revenue − seed price = {{ result.revenue }} − {{ result.seed_price }} = {{ result.profit }} gold</p>
+          <div v-if="displayed.revenue !== undefined" class="math-section">
+            <p><strong>{{ displayed.best_crop }} — Math Breakdown</strong></p>
+            <p>Day {{ result.day_in_season }} — {{ result.days_remaining }} day(s) remaining in season.</p>
+
+            <div class="math-row">
+              <span class="math-label">Revenue</span>
+              <span class="math-formula">{{ displayed.harvests }} harvests × {{ displayed.yield }} yield × {{ displayed.sell_price }}g</span>
+              <span class="math-result">{{ displayed.revenue }} gold</span>
+            </div>
+
+            <div class="math-row">
+              <span class="math-label">Profit per seed</span>
+              <span class="math-formula">{{ displayed.revenue }}g revenue − {{ displayed.seed_price }}g seed cost</span>
+              <span class="math-result">{{ displayed.profit }} gold</span>
+            </div>
           </div>
 
           <div v-if="budget > 0 && result.seeds_affordable !== undefined" class="budget-section">
             <p><strong>Seeds Affordable:</strong> {{ result.seeds_affordable }}</p>
             <p><strong>Total Seed Cost:</strong> {{ result.total_seed_cost }} gold</p>
             <p><strong>Lowest Total Profit:</strong> {{ result.lowest_profit }} gold</p>
+          </div>
+
+          <div v-if="result.top_crops?.length" class="budget-section">
+            <p><strong>Top 5 Crops — click to view details</strong></p>
+            <ol class="top-crops-list">
+              <li v-for="(crop, index) in result.top_crops" :key="crop.name">
+                <button
+                  class="crop-select-btn"
+                  :class="{ active: (selectedCrop?.name ?? result.best_crop) === crop.name }"
+                  @click="selectCrop(crop)"
+                >
+                  <span class="crop-rank">{{ index + 1 }}</span>
+                  <span class="crop-select-name">{{ crop.name }}</span>
+                  <span class="crop-select-profit">{{ crop.profit }} gold/seed</span>
+                </button>
+              </li>
+            </ol>
           </div>
         </div>
       </div>
@@ -120,36 +166,23 @@ async function fetchData() {
 .form-section,
 .results-section {
   border-radius: 24px;
-  padding: 28px;
-  box-shadow: 0 18px 45px rgba(85, 58, 24, 0.12);
+  padding: 24px;
+  box-shadow: 0 18px 45px var(--color-shadow);
+  border: 1px solid var(--color-panel-border);
+  background: var(--color-panel);
 }
 
 .form-section {
-  background: linear-gradient(180deg, rgba(255, 249, 240, 0.98) 0%, rgba(247, 234, 217, 0.95) 100%);
-  border: 1px solid rgba(117, 83, 41, 0.18);
-}
-
-.results-section {
-  background: linear-gradient(180deg, rgba(227, 244, 224, 0.98) 0%, rgba(209, 235, 206, 0.95) 100%);
-  border: 1px solid rgba(71, 128, 78, 0.2);
+  background: linear-gradient(180deg, var(--color-panel) 0%, rgba(255, 255, 255, 0.88) 100%);
 }
 
 .section-heading {
-  margin-bottom: 24px;
-}
-
-.kicker {
-  margin: 0 0 8px;
-  color: #916a3e;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  margin-bottom: 16px;
 }
 
 .section-heading h2 {
   margin: 0 0 10px;
-  color: #3e2c19;
+  color: var(--color-title);
   font-size: 2rem;
 }
 
@@ -157,14 +190,20 @@ async function fetchData() {
 .empty-state p,
 .results-section p {
   margin: 0;
-  color: #4a4339;
+  color: var(--color-text-muted);
   line-height: 1.6;
 }
 
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
 }
 
 .form-group:last-child {
@@ -175,11 +214,12 @@ async function fetchData() {
   flex-direction: row;
   align-items: center;
   gap: 12px;
+  margin-bottom: 10px;
 }
 
 .form-group label {
   margin-bottom: 8px;
-  color: #573d1f;
+  color: var(--color-label);
   font-weight: 700;
 }
 
@@ -191,7 +231,7 @@ async function fetchData() {
 .form-group input,
 .form-group select,
 .fetch-button {
-  min-height: 48px;
+  min-height: 44px;
   border-radius: 14px;
   font: inherit;
 }
@@ -199,24 +239,25 @@ async function fetchData() {
 .form-group input,
 .form-group select {
   padding: 12px 14px;
-  border: 1px solid rgba(117, 83, 41, 0.22);
-  background: rgba(255, 253, 248, 0.95);
-  color: #2d241c;
+  border: 1px solid var(--color-panel-border);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .form-group.checkbox input {
   width: 20px;
   height: 20px;
   margin: 0;
-  accent-color: #8d6639;
+  accent-color: var(--color-accent);
 }
 
 .fetch-button {
   border: none;
-  background: linear-gradient(135deg, #8f6739 0%, #6e4f2b 100%);
-  color: #fff9f0;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
+  color: var(--color-accent-contrast);
   font-weight: 700;
   cursor: pointer;
+  width: 100%;
 }
 
 .empty-state {
@@ -225,9 +266,45 @@ async function fetchData() {
   min-height: 100%;
 }
 
+.best-crop-hero {
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
+  color: var(--color-accent-contrast);
+  margin-bottom: 18px;
+}
+
+.best-crop-kicker {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  color: var(--color-accent-contrast) !important;
+}
+
+.best-crop-name {
+  margin: 0 0 10px;
+  font-size: 2rem;
+  color: var(--color-accent-contrast);
+  line-height: 1.1;
+}
+
+.best-crop-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.best-crop-stats span strong {
+  font-size: 1.1rem;
+}
+
 .empty-title {
   margin-bottom: 10px;
-  color: #22582a;
+  color: var(--color-title);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -235,23 +312,119 @@ async function fetchData() {
 .error {
   padding: 16px;
   border-radius: 16px;
-  background: rgba(255, 236, 236, 0.92);
-  color: #9a2222;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
 }
 
 .math-section,
 .budget-section {
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px dashed rgba(34, 88, 42, 0.25);
+  border-top: 1px dashed var(--color-panel-border);
+}
+
+.math-row {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+
+.math-label {
+  font-weight: 700;
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.math-formula {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.math-result {
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
 }
 
 .results-section p + p {
   margin-top: 12px;
 }
 
+.top-crops-list {
+  margin: 12px 0 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.crop-select-btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.crop-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: rgba(15, 118, 110, 0.14);
+  color: var(--color-accent-strong);
+  flex: 0 0 24px;
+}
+
+.crop-select-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-surface-soft);
+}
+
+.crop-select-btn.active {
+  border-color: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-strong) 100%);
+  color: var(--color-accent-contrast);
+}
+
+.crop-select-btn.active .crop-rank {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--color-accent-contrast);
+}
+
+.crop-select-name {
+  font-weight: 700;
+}
+
+.crop-select-profit {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-left: auto;
+}
+
 @media (max-width: 900px) {
   .page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -2,10 +2,24 @@
   font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #3f3328;
+  --color-text: #1f2933;
+  --color-text-muted: #52606d;
+  --color-surface: #e7edf5;
+  --color-surface-soft: #dce5f0;
+  --color-panel: #ffffff;
+  --color-panel-border: #bcc9d8;
+  --color-title: #102a43;
+  --color-label: #243b53;
+  --color-accent: #0f766e;
+  --color-accent-strong: #115e59;
+  --color-accent-contrast: #f0fdfa;
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #991b1b;
+  --color-shadow: rgba(15, 23, 42, 0.16);
+  color: var(--color-text);
   background:
-    radial-gradient(circle at top, rgba(255, 239, 214, 0.94) 0%, rgba(255, 239, 214, 0.2) 34%, transparent 60%),
-    linear-gradient(180deg, #f4ecdb 0%, #ebe4d3 100%);
+    radial-gradient(circle at top, rgba(15, 118, 110, 0.2) 0%, rgba(15, 118, 110, 0.06) 28%, transparent 56%),
+    linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-soft) 100%);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

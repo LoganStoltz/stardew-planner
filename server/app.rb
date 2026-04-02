@@ -56,6 +56,24 @@ def oasis_only?(crop)
   sources.any? { |s| s['location'] == 'Oasis' }
 end
 
+def available_in_year?(crop, year)
+  requirements = crop.dig('availability', 'requirements') || []
+  year_requirements = requirements.select { |req| req['type'] == 'year' }
+  return true if year_requirements.empty?
+
+  year_value = [year.to_i, 1].max
+
+  year_requirements.all? do |requirement|
+    min_year = requirement['min']
+    max_year = requirement['max']
+
+    meets_min = min_year.nil? || year_value >= min_year.to_i
+    meets_max = max_year.nil? || year_value <= max_year.to_i
+
+    meets_min && meets_max
+  end
+end
+
 use Rack::Cors do
   allow do
     origins '*'
@@ -67,10 +85,16 @@ get '/' do
   "API running"
 end
 
+get '/api/crops' do
+  content_type :json
+  crops_data.to_json
+end
+
 get '/api/best-crops' do
   season = params['season']&.downcase
   day_in_season = params['days'].to_i
   days = days_remaining_in_season(day_in_season)
+  year = [params['year'].to_i, 1].max
   budget = params['budget'].to_i
   include_ancient_fruit = param_true?(params['includeAncientFruit'])
   include_sweet_gem_berry = param_true?(params['includeSweetGemBerry'])
@@ -85,7 +109,8 @@ get '/api/best-crops' do
     crop_name = crop['name']
     (!include_ancient_fruit && crop_name == 'Ancient Fruit') ||
       (!include_sweet_gem_berry && crop_name == 'Sweet Gem Berry') ||
-       (!include_oasis && oasis_only?(crop))
+       (!include_oasis && oasis_only?(crop)) ||
+       !available_in_year?(crop, year)
   end
 
   scored = filtered_crops.map do |crop|
@@ -105,7 +130,8 @@ get '/api/best-crops' do
     }
   end
 
-  best = scored.max_by { |crop| crop[:profit] }
+  ranked_crops = scored.sort_by { |crop| -crop[:profit] }.first(5)
+  best = ranked_crops.first
 
   content_type :json
   if best.nil? || best[:profit] <= 0
@@ -121,7 +147,18 @@ get '/api/best-crops' do
       yield: best[:yield],
       sell_price: best[:sell_price],
       seed_price: best[:seed_price],
-      revenue: best[:revenue]
+      revenue: best[:revenue],
+      top_crops: ranked_crops.map do |crop|
+        {
+          name: crop[:name],
+          profit: crop[:profit],
+          harvests: crop[:harvests],
+          revenue: crop[:revenue],
+          seed_price: crop[:seed_price],
+          yield: crop[:yield],
+          sell_price: crop[:sell_price]
+        }
+      end
     }
 
     # Add budget calculations if budget is provided
