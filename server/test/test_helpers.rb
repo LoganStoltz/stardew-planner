@@ -222,4 +222,160 @@ class TestHelpers < Minitest::Test
     assert oasis_only?(crop)
   end
 
+  # ---------------------------------------------------------------------------
+  # normalized_quality
+  # ---------------------------------------------------------------------------
+
+  def test_normalized_quality_accepts_regular
+    assert_equal 'regular', normalized_quality('regular')
+  end
+
+  def test_normalized_quality_accepts_silver
+    assert_equal 'silver', normalized_quality('silver')
+  end
+
+  def test_normalized_quality_accepts_gold
+    assert_equal 'gold', normalized_quality('gold')
+  end
+
+  def test_normalized_quality_is_case_insensitive
+    assert_equal 'gold', normalized_quality('GoLd')
+  end
+
+  def test_normalized_quality_defaults_to_regular_for_invalid_value
+    assert_equal 'regular', normalized_quality('iridium')
+  end
+
+  def test_normalized_quality_defaults_to_regular_for_nil
+    assert_equal 'regular', normalized_quality(nil)
+  end
+
+  # ---------------------------------------------------------------------------
+  # greenhouse_days_to_complete_harvests
+  # ---------------------------------------------------------------------------
+
+  def test_greenhouse_days_for_single_harvest_returns_growth_days
+    crop = { 'economy' => { 'growth_days' => 13, 'regrow_days' => 4 } }
+    assert_equal 13, greenhouse_days_to_complete_harvests(crop: crop, harvests: 1)
+  end
+
+  def test_greenhouse_days_for_regrow_crop_multiple_harvests
+    # 13 + (2-1)*4 = 17
+    crop = { 'economy' => { 'growth_days' => 13, 'regrow_days' => 4 } }
+    assert_equal 17, greenhouse_days_to_complete_harvests(crop: crop, harvests: 2)
+  end
+
+  def test_greenhouse_days_for_regrow_crop_many_harvests
+    # 28 + (5-1)*7 = 56
+    crop = { 'economy' => { 'growth_days' => 28, 'regrow_days' => 7 } }
+    assert_equal 56, greenhouse_days_to_complete_harvests(crop: crop, harvests: 5)
+  end
+
+  def test_greenhouse_days_for_non_regrow_crop_multiple_harvests
+    # replant each cycle: 12 * 3 = 36
+    crop = { 'economy' => { 'growth_days' => 12, 'regrow_days' => nil } }
+    assert_equal 36, greenhouse_days_to_complete_harvests(crop: crop, harvests: 3)
+  end
+
+  def test_greenhouse_days_clamps_harvests_to_minimum_one
+    crop = { 'economy' => { 'growth_days' => 10, 'regrow_days' => 3 } }
+    assert_equal 10, greenhouse_days_to_complete_harvests(crop: crop, harvests: 0)
+  end
+
+  def test_greenhouse_days_returns_zero_when_growth_days_invalid
+    crop = { 'economy' => { 'growth_days' => 0, 'regrow_days' => 3 } }
+    assert_equal 0, greenhouse_days_to_complete_harvests(crop: crop, harvests: 3)
+  end
+
+  def test_greenhouse_days_handles_zero_regrow_days_as_single_growth_only
+    crop = { 'economy' => { 'growth_days' => 13, 'regrow_days' => 0 } }
+    assert_equal 13, greenhouse_days_to_complete_harvests(crop: crop, harvests: 4)
+  end
+
+  # ---------------------------------------------------------------------------
+  # greenhouse_revenue_result
+  # ---------------------------------------------------------------------------
+
+  def test_greenhouse_revenue_result_single_harvest_uses_initial_value
+    crop = {
+      'name' => 'Blueberry',
+      'economy' => {
+        'growth_days' => 13,
+        'regrow_days' => 4,
+        'yield' => 3,
+        'seed_price' => 80,
+        'sell_prices' => { 'regular' => 55, 'gold' => 82 }
+      }
+    }
+
+    result = greenhouse_revenue_result(crop: crop, crop_count: 10, harvests: 1, quality: 'regular')
+
+    assert_equal 'Blueberry', result['cropName']
+    assert_equal 10, result['planted']
+    assert_equal 1, result['harvests']
+    assert_equal 0, result['futureHarvests']
+    assert_equal 13, result['daysToCompleteHarvests']
+    assert_equal 30, result['totalItems']
+    assert_equal 1650, result['lowestRevenue']
+    assert_equal 800, result['totalSeedCost']
+    assert_equal 850, result['lowestProfit']
+  end
+
+  def test_greenhouse_revenue_result_multiple_harvests_includes_future_cycles
+    crop = {
+      'name' => 'Blueberry',
+      'economy' => {
+        'growth_days' => 13,
+        'regrow_days' => 4,
+        'yield' => 3,
+        'seed_price' => 80,
+        'sell_prices' => { 'regular' => 55, 'gold' => 82 }
+      }
+    }
+
+    result = greenhouse_revenue_result(crop: crop, crop_count: 10, harvests: 2, quality: 'regular')
+
+    assert_equal 1, result['futureHarvests']
+    assert_equal 17, result['daysToCompleteHarvests']
+    assert_equal 60, result['totalItems']
+    assert_equal 3300, result['lowestRevenue']
+    assert_equal 2500, result['lowestProfit']
+  end
+
+  def test_greenhouse_revenue_result_uses_selected_quality
+    crop = {
+      'name' => 'Blueberry',
+      'economy' => {
+        'growth_days' => 13,
+        'regrow_days' => 4,
+        'yield' => 3,
+        'seed_price' => 80,
+        'sell_prices' => { 'regular' => 55, 'gold' => 82 }
+      }
+    }
+
+    result = greenhouse_revenue_result(crop: crop, crop_count: 10, harvests: 2, quality: 'gold')
+    assert_equal 82, result['selectedSellPrice']
+    assert_equal 4920, result['lowestRevenue']
+  end
+
+  def test_greenhouse_revenue_result_marks_non_regrow_crops
+    crop = {
+      'name' => 'Cauliflower',
+      'economy' => {
+        'growth_days' => 12,
+        'regrow_days' => nil,
+        'yield' => 1,
+        'seed_price' => 80,
+        'sell_prices' => { 'regular' => 192 }
+      }
+    }
+
+    result = greenhouse_revenue_result(crop: crop, crop_count: 5, harvests: 3, quality: 'regular')
+
+    assert_equal false, result['isRegrowCrop']
+    assert_nil result['regrowDays']
+    assert_equal 36, result['daysToCompleteHarvests']
+  end
+
 end

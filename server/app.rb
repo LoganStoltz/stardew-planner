@@ -99,9 +99,7 @@ get '/api/best-crops' do
   include_ancient_fruit = param_true?(params['includeAncientFruit'])
   include_sweet_gem_berry = param_true?(params['includeSweetGemBerry'])
   include_oasis = param_true?(params['includeOasis'])
-  quality = params['quality']&.downcase || 'regular'
-
-  quality = 'regular' unless %w[regular silver gold].include?(quality)
+  quality = normalized_quality(params['quality'])
 
   seasonal_crops = crops_data.select { |crop| crop.fetch('seasons', []).include?(season) }
 
@@ -179,4 +177,79 @@ get '/api/best-crops' do
 
     response.to_json
   end
+end
+
+get '/api/greenhouse-revenue' do
+  crop_name = params['cropName'].to_s
+  crop_count = params['cropCount'].to_i
+  harvests = params['harvests'].to_i
+  quality = normalized_quality(params['quality'])
+
+  content_type :json
+
+  return({ error: 'Crop name is required.' }.to_json) if crop_name.empty?
+  return({ error: 'Number planted must be at least 1.' }.to_json) if crop_count < 1
+  return({ error: 'Harvests must be at least 1.' }.to_json) if harvests < 1
+
+  crop = crops_data.find { |candidate| candidate['name'] == crop_name }
+  return({ error: 'Crop not found.' }.to_json) if crop.nil?
+
+  greenhouse_revenue_result(
+    crop: crop,
+    crop_count: crop_count,
+    harvests: harvests,
+    quality: quality
+  ).to_json
+end
+
+def normalized_quality(value)
+  quality = value.to_s.downcase
+  %w[regular silver gold].include?(quality) ? quality : 'regular'
+end
+
+def greenhouse_revenue_result(crop:, crop_count:, harvests:, quality:)
+  crop_yield_amount = crop_yield(crop)
+  sell_price = crop_sell_price(crop, quality)
+  seed_price = economy_for(crop)['seed_price'].to_i
+  growth_days = economy_for(crop)['growth_days'].to_i
+  regrow_days = economy_for(crop)['regrow_days']
+  days_to_complete_harvests = greenhouse_days_to_complete_harvests(crop: crop, harvests: harvests)
+
+  total_items = crop_count * harvests * crop_yield_amount
+  lowest_revenue = total_items * sell_price
+  total_seed_cost = crop_count * seed_price
+  lowest_profit = lowest_revenue - total_seed_cost
+
+  {
+    'cropName' => crop['name'],
+    'planted' => crop_count,
+    'harvests' => harvests,
+    'futureHarvests' => [harvests - 1, 0].max,
+    'growthDays' => growth_days,
+    'regrowDays' => regrow_days,
+    'daysToCompleteHarvests' => days_to_complete_harvests,
+    'isRegrowCrop' => !regrow_days.nil?,
+    'yieldPerHarvest' => crop_yield_amount,
+    'quality' => quality,
+    'selectedSellPrice' => sell_price,
+    'seedPrice' => seed_price,
+    'totalItems' => total_items,
+    'lowestRevenue' => lowest_revenue,
+    'totalSeedCost' => total_seed_cost,
+    'lowestProfit' => lowest_profit
+  }
+end
+
+def greenhouse_days_to_complete_harvests(crop:, harvests:)
+  safe_harvests = [harvests.to_i, 1].max
+  growth_days = economy_for(crop)['growth_days'].to_i
+  return 0 if growth_days <= 0
+
+  regrow_days = economy_for(crop)['regrow_days']
+  return growth_days * safe_harvests if regrow_days.nil?
+
+  regrow_days_value = regrow_days.to_i
+  return growth_days if safe_harvests == 1 || regrow_days_value <= 0
+
+  growth_days + ((safe_harvests - 1) * regrow_days_value)
 end

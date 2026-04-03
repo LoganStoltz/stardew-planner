@@ -11,6 +11,7 @@ const budget = ref(null)
 const result = ref(null)
 const selectedCrop = ref(null)
 const searchedSeason = ref(null)
+const showAncientFruitNote = ref(true)
 
 const seasons = ['spring', 'summer', 'fall', 'winter']
 
@@ -89,6 +90,18 @@ async function fetchData() {
       <div class="form-group checkbox">
         <input id="oasis-access" v-model="oasisAccess" type="checkbox" />
         <label for="oasis-access">Do you have access to the Oasis?</label>
+      </div>
+
+      <div v-if="showAncientFruitNote" class="ancient-fruit-note">
+        <p><strong>Ancient Fruit note:</strong> This planner excludes Ancient Fruit because it takes a full season to mature; while it can be planted in spring, summer, and fall, it is generally best used in the Greenhouse.</p>
+        <button
+          class="ancient-fruit-note-close"
+          type="button"
+          @click="showAncientFruitNote = false"
+          aria-label="Close Ancient Fruit note"
+        >
+          Exit
+        </button>
       </div>
 
       <div class="form-group">
@@ -360,6 +373,42 @@ async function fetchData() {
   margin: 0;
   color: #1a3a5c !important;
   line-height: 1.5;
+}
+
+.ancient-fruit-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 6px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(26, 135, 236, 0.35);
+  background: rgba(26, 135, 236, 0.09);
+}
+
+.ancient-fruit-note-close {
+  flex: 0 0 auto;
+  border: 1px solid rgba(26, 135, 236, 0.4);
+  background: rgba(255, 255, 255, 0.7);
+  color: #1a3a5c;
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin: 0;
+  line-height: 1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ancient-fruit-note-close:hover {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.ancient-fruit-note p {
+  flex: 1;
+  margin: 0;
+  color: #1a3a5c;
+  line-height: 1.45;
 }
 
 .math-section,
