@@ -1,29 +1,43 @@
 <template>
-  <div class="shell">
-    <header class="shell-header">
-      <div>
-        <p class="eyebrow">Stardew Planner</p>
-        <h1>Crop Planning Tools</h1>
-      </div>
+  <div class="app-layout">
+    <div class="shell">
+      <header class="shell-header">
+        <div>
+          <p class="eyebrow">Stardew Planner</p>
+          <h1>Crop Planning Tools</h1>
+        </div>
 
-      <nav class="nav-links" aria-label="Planner tools">
-        <RouterLink to="/" class="nav-link">Season Planner</RouterLink>
-        <RouterLink to="/greenhouse-revenue" class="nav-link">Greenhouse Revenue</RouterLink>
-      </nav>
-    </header>
+        <nav class="nav-links" aria-label="Planner tools">
+          <RouterLink to="/" class="nav-link">Season Planner</RouterLink>
+          <RouterLink to="/greenhouse-revenue" class="nav-link">Greenhouse Revenue</RouterLink>
+        </nav>
+      </header>
 
-    <main>
-      <RouterView />
-    </main>
+      <main>
+        <RouterView />
+      </main>
+    </div>
+
+    <Footer />
   </div>
 </template>
 
+<script setup lang="js">
+  import Footer from './Footer.vue';
+</script>
+
 <style scoped>
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .shell {
   width: min(1100px, calc(100% - 32px));
   margin: 0 auto;
   padding: 32px 0 56px;
-  min-height: 100vh;
+  flex: 1;
 }
 
 .shell-header {
