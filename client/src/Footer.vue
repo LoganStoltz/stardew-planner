@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p>Created by Logan Stoltz - 2026</p>
+    <p>Created by Logan Stoltz, 2026 | &copy; All rights reserved</p>
   </footer>
 </template>
 
