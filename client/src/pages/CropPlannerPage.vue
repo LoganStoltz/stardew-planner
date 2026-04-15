@@ -42,7 +42,7 @@ async function fetchData() {
     includeOasis: oasisAccess.value,
   })
 
-  const res = await fetch(`https://3.142.121.136:4567/api/best-crops?${params.toString()}`)
+  const res = await fetch(`http://3.142.121.136:4567/api/best-crops?${params.toString()}`)
   result.value = await res.json()
   selectedCrop.value = null
 }
