@@ -4,5 +4,8 @@ source "https://rubygems.org"
 
 # gem "rails"
 gem 'sinatra'
+gem 'rack'
+gem 'rackup'
+gem 'webrick'
 gem 'json'
 gem 'rack-cors'
