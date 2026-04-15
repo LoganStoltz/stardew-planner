@@ -2,6 +2,14 @@ require 'sinatra'
 require 'json'
 require 'rack/cors'
 
+set :protection, false
+set :bind, '0.0.0.0'
+set :port, 4567
+
+options '*' do
+  200
+end
+
 def crops_data
   file_path = File.expand_path('data/crops.json', __dir__)
   JSON.parse(File.read(file_path))
@@ -71,13 +79,6 @@ def available_in_year?(crop, year)
     meets_max = max_year.nil? || year_value <= max_year.to_i
 
     meets_min && meets_max
-  end
-end
-
-use Rack::Cors do
-  allow do
-    origins '*'
-    resource '*', headers: :any, methods: [:get]
   end
 end
 
