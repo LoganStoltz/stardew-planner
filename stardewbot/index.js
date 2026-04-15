@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
-dotenv.config();
+
+dotenv.config({
+  path: '/home/ec2-user/stardewbot/.env'
+});
+console.log('TOKEN LOADED:', process.env.DISCORD_TOKEN);
 
 import { Client, GatewayIntentBits } from 'discord.js';
 
