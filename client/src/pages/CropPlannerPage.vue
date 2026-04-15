@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const API_BASE_URL = 'https://api.stardewvalleyplanner.com'
+
 const season = ref('spring')
 const dayInSeason = ref(1)
 const year = ref(1)
@@ -42,7 +44,7 @@ async function fetchData() {
     includeOasis: oasisAccess.value,
   })
 
-  const res = await fetch(`http://3.142.121.136:4567/api/best-crops?${params.toString()}`)
+  const res = await fetch(`${API_BASE_URL}/api/best-crops?${params.toString()}`)
   result.value = await res.json()
   selectedCrop.value = null
 }

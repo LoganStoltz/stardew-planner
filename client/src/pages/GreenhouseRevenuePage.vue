@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 
+const API_BASE_URL = 'https://api.stardewvalleyplanner.com'
+
 const dropdownOpen = ref(false)
 
 function selectCrop(name) {
@@ -35,7 +37,7 @@ async function loadCrops() {
   cropsLoadError.value = ''
 
   try {
-    const response = await fetch('http://3.142.121.136:4567/api/crops')
+    const response = await fetch(`${API_BASE_URL}/api/crops`)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }
@@ -95,7 +97,7 @@ async function calculateRevenue() {
   })
 
   try {
-    const response = await fetch(`http://3.142.121.136:4567/api/greenhouse-revenue?${params.toString()}`)
+    const response = await fetch(`${API_BASE_URL}/api/greenhouse-revenue?${params.toString()}`)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }
