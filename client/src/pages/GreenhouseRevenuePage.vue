@@ -35,7 +35,7 @@ async function loadCrops() {
   cropsLoadError.value = ''
 
   try {
-    const response = await fetch('http://3.142.121.136:4567/api/crops')
+    const response = await fetch('https://3.142.121.136:4567/api/crops')
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }
@@ -95,7 +95,7 @@ async function calculateRevenue() {
   })
 
   try {
-    const response = await fetch(`http://localhost:4567/api/greenhouse-revenue?${params.toString()}`)
+    const response = await fetch(`https://3.142.121.136:4567/api/greenhouse-revenue?${params.toString()}`)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }

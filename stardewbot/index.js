@@ -8,7 +8,7 @@ console.log('TOKEN LOADED:', process.env.DISCORD_TOKEN);
 import { Client, GatewayIntentBits } from 'discord.js';
 
 const VALID_SEASONS = new Set(['spring', 'summer', 'fall', 'winter']);
-const API_BASE_URL = (process.env.API_BASE_URL || 'http://3.142.121.136:4567').replace(/\/$/, '');
+const API_BASE_URL = (process.env.API_BASE_URL || 'https://3.142.121.136:4567').replace(/\/$/, '');
 
 function formatGold(value) {
     return `${Number(value || 0).toLocaleString()}g`;
