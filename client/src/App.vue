@@ -103,5 +103,16 @@
     align-items: stretch;
     flex-direction: column;
   }
+
+  .nav-links {
+    justify-content: center;
+    gap: 12px;
+    flex-direction: row;
+  }
+
+  .nav-link {
+    flex: 1 1 0;
+    text-align: center;
+  }
 }
 </style>
