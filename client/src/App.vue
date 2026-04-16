@@ -2,7 +2,7 @@
   <div class="app-layout">
     <div class="shell">
       <header class="shell-header">
-        <div>
+        <div class='heading'>
           <p class="eyebrow">Stardew Planner</p>
           <h1>Crop Planning Tools</h1>
         </div>
@@ -102,6 +102,10 @@
   .shell-header {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .heading {
+    text-align: center;
   }
 
   .nav-links {
