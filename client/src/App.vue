@@ -112,12 +112,16 @@
     justify-content: center;
     gap: 12px;
     flex-direction: row;
+    align-items: stretch;
   }
 
   .nav-link {
     flex: 1 1 0;
     text-align: center;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
