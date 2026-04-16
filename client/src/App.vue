@@ -118,7 +118,6 @@
   .nav-link {
     flex: 1 1 0;
     text-align: center;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
