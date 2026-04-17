@@ -20,6 +20,13 @@
   background:
     radial-gradient(circle at center, rgba(15, 118, 110, 0.2) 0%, rgba(15, 118, 110, 0.2) 40%, transparent 70%),
     linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-soft) 100%);
+  background-image:
+    radial-gradient(circle at center, rgba(15, 118, 110, 0.2) 0%, rgba(15, 118, 110, 0.2) 40%, transparent 70%),
+    linear-gradient(180deg, rgba(231, 237, 245, 0.82) 0%, rgba(220, 229, 240, 0.82) 100%),
+    url('/src/assets/stardewbg.png');
+  background-size: auto, auto, cover;
+  background-position: center, center, center;
+  background-attachment: fixed, fixed, fixed;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

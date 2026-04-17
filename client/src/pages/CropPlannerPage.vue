@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { usePreferences } from '../usePreferences.js'
+
+const { showTips } = usePreferences()
 
 const API_BASE_URL = 'https://api.stardewvalleyplanner.com'
 
@@ -94,7 +97,7 @@ async function fetchData() {
         <label for="oasis-access">Do you have access to the Oasis?</label>
       </div>
 
-      <div v-if="showAncientFruitNote" class="ancient-fruit-note">
+      <div v-if="showTips && showAncientFruitNote" class="ancient-fruit-note">
         <p><strong>Ancient Fruit note:</strong> This planner excludes Ancient Fruit because it takes a full season to mature; while it can be planted in spring, summer, and fall, it is generally best used in the Greenhouse.</p>
         <button
           class="ancient-fruit-note-close"
@@ -102,7 +105,7 @@ async function fetchData() {
           @click="showAncientFruitNote = false"
           aria-label="Close Ancient Fruit note"
         >
-          Exit
+          Close
         </button>
       </div>
 

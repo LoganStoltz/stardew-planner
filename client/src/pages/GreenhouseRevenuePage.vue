@@ -1,5 +1,8 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
+import { usePreferences } from '../usePreferences.js'
+
+const { showTips } = usePreferences()
 
 const API_BASE_URL = 'https://api.stardewvalleyplanner.com'
 
@@ -182,7 +185,7 @@ function formatAbsoluteGold(value) {
         </select>
       </div>
 
-      <div v-if="showGreenhouseTip" class="greenhouse-tip">
+      <div v-if="showTips && showGreenhouseTip" class="greenhouse-tip">
         <p><strong>Quality tip:</strong> Crop quality is not guaranteed. Higher quality selections provide a rough estimate for better crops, while regular quality shows the lowest possible profit.</p>
         <button
           class="greenhouse-tip-close"
@@ -190,7 +193,7 @@ function formatAbsoluteGold(value) {
           @click="showGreenhouseTip = false"
           aria-label="Close quality tip"
         >
-          Exit
+          Close
         </button>
       </div>
 
